@@ -83,7 +83,7 @@ func calculate_basis()->void:
 		if versor!=Vector3(0,0,0):
 			soften_basis(versor,plane_normal)
 			#transform.basis.orthonormalized()
-			#transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y)).orthonormalized()
+			transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y)).orthonormalized()
 		#print(\"Basis\",transform.basis,\"end \")
 		#print(\"  \",plane_normal,\"  \",versor)
 
