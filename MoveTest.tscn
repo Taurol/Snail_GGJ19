@@ -4,7 +4,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "extends KinematicBody
+script/source = "extends RigidBody
 
 var gravity:int=10
 var gravity_speed:float=0
@@ -27,6 +27,8 @@ func _input(event):
 
 func _ready()->void:
 	$CollisionShape/RayCast.add_exception(self)
+	
+	
 	pass # Replace with function body.
 
 func _physics_process(delta):
@@ -34,7 +36,7 @@ func _physics_process(delta):
 	print(coin_counter)
 	if $RayCast.is_colliding():
 		gravity_speed=0
-	calculate_basis()
+	#calculate_basis()
 	var a:Vector3=Vector3(0,-gravity_speed,0).normalized()*gravity_speed
 	var b:Vector3=a
 	#var a:Vector3=Vector3(0,0,0)
@@ -57,7 +59,10 @@ func _physics_process(delta):
 			#print(PI+dir_x*angle(a.normalized(),transform.basis.z.normalized()))
 		if a!=Vector3(0,-gravity_speed,0)&& !$CollisionShape/snail/AnimationPlayer.is_playing():
 			$CollisionShape/snail/AnimationPlayer.play(\"default\")
-	move_and_slide((a.normalized()*5),transform.basis.y,false,4,1,true)
+	linear_velocity=((a.normalized()*5))
+	#move_and_slide((a.normalized()*5),transform.basis.y,false,4,1,true)
+	#move_and_slide_with_snap(a.normalized()*5,transform.basis.y)
+	
 
 func set_perspective(y_rot)->void:
 	if y_rot!=rotation_degrees.y:
@@ -81,7 +86,7 @@ func calculate_basis()->void:
 		var versor:Vector3=plane_normal.cross(transform.basis.y.normalized()).normalized()
 		if versor!=Vector3(0,0,0):
 			soften_basis(versor,plane_normal)
-			#transform.basis.orthonormalized()
+			transform.basis.orthonormalized()
 			transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y)).orthonormalized()
 		#print(\"Basis\",transform.basis,\"end \")
 		#print(\"  \",plane_normal,\"  \",versor)
@@ -158,11 +163,16 @@ tracks/0/keys = {
 "values": [ true, false ]
 }
 
-[node name="MoveTest" type="KinematicBody" groups=[
+[node name="MoveTest" type="RigidBody" groups=[
 "Player",
 ]]
-collision/safe_margin = 0.005
+mode = 2
 script = SubResource( 1 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0946464, 0, -0.373095 )
+enabled = true
+cast_to = Vector3( 0, -0.6, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0899481, 0, -0.126201 )
@@ -175,10 +185,6 @@ cast_to = Vector3( 0, -2, 0 )
 
 [node name="snail" parent="CollisionShape" instance=ExtResource( 1 )]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.000225633, -0.251743, -0.0297914 )
-
-[node name="RayCast" type="RayCast" parent="."]
-enabled = true
-cast_to = Vector3( 0, -0.35, 0 )
 
 [node name="Tween" type="Tween" parent="."]
 

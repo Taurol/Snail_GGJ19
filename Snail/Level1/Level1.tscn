@@ -21,5 +21,6 @@ material/0 = ExtResource( 2 )
 shape = SubResource( 1 )
 
 [node name="MoveTest" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.84088, -0.905611, -3.03871 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.866408, 0, -3.92921 )
+gravity_scale = 0.0
 
