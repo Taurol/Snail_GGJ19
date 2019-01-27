@@ -16,6 +16,10 @@ _global_script_class_icons={
 [application]
 
 config/name="Disparos"
+<<<<<<< HEAD
+=======
+run/main_scene="res://Snail/Level1/Level1_Master.tscn"
+>>>>>>> 487dc5edd235571c6f9cb3f46ecd38114ca5d2b2
 config/icon="res://icon.png"
 
 [autoload]

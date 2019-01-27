@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Snail/Scenes/snail_animated.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Snail/textures/hdri_clean_sky.exr" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 
@@ -103,7 +104,7 @@ func coin_system():
 		if get_slide_collision(n).is_in_group(\"Coins\"):
 			coin_counter+=1\"\"\""
 
-[sub_resource type="CapsuleShape" id=11]
+[sub_resource type="CapsuleShape" id=2]
 
 radius = 0.27563
 height = 0.714641
@@ -163,7 +164,20 @@ tracks/0/keys = {
 "values": [ true, false ]
 }
 
+<<<<<<< HEAD
 [node name="MoveTest" type="RigidBody" groups=[
+=======
+[sub_resource type="PanoramaSky" id=11]
+
+panorama = ExtResource( 2 )
+
+[sub_resource type="Environment" id=12]
+
+background_mode = 2
+background_sky = SubResource( 11 )
+
+[node name="MoveTest" type="KinematicBody" groups=[
+>>>>>>> 487dc5edd235571c6f9cb3f46ecd38114ca5d2b2
 "Player",
 ]]
 mode = 2
@@ -176,7 +190,7 @@ cast_to = Vector3( 0, -0.6, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0899481, 0, -0.126201 )
-shape = SubResource( 11 )
+shape = SubResource( 2 )
 
 [node name="RayCast" type="RayCast" parent="CollisionShape"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0059469, 0, -0.358795 )
@@ -204,5 +218,6 @@ anims/Particles = SubResource( 10 )
 
 [node name="Camera" type="Camera" parent="Spatial/Position3D"]
 transform = Transform( 1, 0, 0, 0, 0.877555, 0.479476, 0, -0.479476, 0.877555, 0, 1.45093, 3.04936 )
+environment = SubResource( 12 )
 current = true
 
