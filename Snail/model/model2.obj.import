@@ -1,0 +1,18 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/model2.obj-3963ca825241eb7743ef7d21b9cf3769.mesh"
+
+[deps]
+
+files=[ "res://.import/model2.obj-3963ca825241eb7743ef7d21b9cf3769.mesh" ]
+
+source_file="res://Snail/model/model2.obj"
+dest_files=[ "res://.import/model2.obj-3963ca825241eb7743ef7d21b9cf3769.mesh", "res://.import/model2.obj-3963ca825241eb7743ef7d21b9cf3769.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+optimize_mesh=true

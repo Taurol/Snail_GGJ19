@@ -1,0 +1,191 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Snail/Scenes/snail_animated.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends KinematicBody
+
+var gravity:int=10
+var gravity_speed:float=0
+var dir_x:int=1
+var dir_y:int=1
+var b=0
+var c=0
+var coin_counter=0
+
+\"\"\"func _init():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+func _input(event):
+	if (event is InputEventMouseMotion):
+		var a
+		a=event.relative
+		b=fmod((b-0.001*a.x),360)
+		c=max(min(c-0.001*a.y,90),-90)
+		$Spatial.set_rotation(Vector3(0,b,0))
+		$Spatial/Position3D.set_rotation(Vector3(c,0,0))\"\"\"
+
+func _ready()->void:
+	$CollisionShape/RayCast.add_exception(self)
+	pass # Replace with function body.
+
+func _physics_process(delta):
+	gravity_speed+=gravity*delta
+	
+	if $RayCast.is_colliding():
+		gravity_speed=0
+	calculate_basis()
+	var a:Vector3=Vector3(0,-gravity_speed,0).normalized()*gravity_speed
+	var b:Vector3=a
+	#var a:Vector3=Vector3(0,0,0)
+	if !$Tween.is_active():
+		dir_x=0
+		dir_y=0
+		if Input.is_key_pressed(KEY_D):
+			a+=transform.basis.x.normalized()
+			dir_x=1
+		if Input.is_key_pressed(KEY_A):
+			a-=transform.basis.x.normalized()
+		if Input.is_key_pressed(KEY_W):
+			a-=transform.basis.z.normalized()
+			dir_y=1
+		if Input.is_key_pressed(KEY_S):
+			a+=transform.basis.z.normalized()
+			dir_y=-1
+		if (b!=a):
+			$CollisionShape.rotation.y=(PI-angle(a.normalized(),transform.basis.z.normalized())+dir_x*(PI+dir_y*PI/2))
+			#print(PI+dir_x*angle(a.normalized(),transform.basis.z.normalized()))
+		if a!=Vector3(0,-gravity_speed,0)&& !$CollisionShape/snail/AnimationPlayer.is_playing():
+			$CollisionShape/snail/AnimationPlayer.play(\"default\")
+	move_and_slide((a.normalized()*5),transform.basis.y,false,4,1,true)
+
+func set_perspective(y_rot)->void:
+	if y_rot!=rotation_degrees.y:
+		$Tween.interpolate_property(self,\"rotation_degrees\",rotation_degrees,Vector3(0,y_rot,0),0.1,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+		$Tween.start()
+
+func add_coin()->void:
+	$AnimationPlayer.play(\"Particles\")
+	coin_counter+=1
+
+func angle(a:Vector3,b:Vector3)->float:
+	return acos(a.dot(b))
+
+func module(a:Vector3)->float:
+	var m:float = sqrt(a.x*a.x + a.y*a.y+a.z*a.z)
+	return m
+
+func calculate_basis():
+	if $CollisionShape/RayCast.is_colliding():
+		var plane_normal:Vector3=$CollisionShape/RayCast.get_collision_normal().normalized()
+		var versor:Vector3=plane_normal.cross(transform.basis.y.normalized()).normalized()
+		if versor!=Vector3(0,0,0):
+			transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y))
+		print(\"Basis\",transform.basis,\"end \")
+		print(\"  \",plane_normal,\"  \",versor)
+\"\"\"
+func coin_system():
+	for n in range(get_slide_count()-1):
+		if get_slide_collision(n).is_in_group(\"Coins\"):
+			coin_counter+=1\"\"\""
+
+[sub_resource type="SphereShape" id=2]
+
+radius = 0.302652
+
+[sub_resource type="CanvasItemMaterial" id=3]
+
+
+[sub_resource type="Curve" id=4]
+
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.403438, 0.4472 ), -0.140034, -0.140034, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+
+curve = SubResource( 4 )
+
+[sub_resource type="Gradient" id=6]
+
+offsets = PoolRealArray( 0, 0.377483, 1 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.921875, 0.147644, 0.147644, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=7]
+
+gradient = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=8]
+
+next_pass = SubResource( 3 )
+trail_color_modifier = SubResource( 7 )
+emission_shape = 2
+emission_box_extents = Vector3( 0.4, 0.5, 0.4 )
+spread = 0.0
+gravity = Vector3( 0, 9.8, 0 )
+radial_accel = 6.45
+radial_accel_random = 0.48
+damping = 9.68
+scale_curve = SubResource( 5 )
+color = Color( 0.788235, 0.898039, 0.105882, 1 )
+
+[sub_resource type="SphereMesh" id=9]
+
+radius = 0.01
+height = 0.01
+
+[sub_resource type="Animation" id=10]
+
+tracks/0/type = "value"
+tracks/0/path = NodePath("Particles:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[node name="MoveTest" type="KinematicBody" groups=[
+"Player",
+]]
+collision/safe_margin = 0.005
+script = SubResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0899481, 0, -0.126201 )
+shape = SubResource( 2 )
+
+[node name="RayCast" type="RayCast" parent="CollisionShape"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0059469, 0, -0.358795 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="snail" parent="CollisionShape" instance=ExtResource( 1 )]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.000225633, -0.251743, -0.0297914 )
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, -0.35, 0 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Particles" type="Particles" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25841, 0 )
+emitting = false
+amount = 100
+process_material = SubResource( 8 )
+draw_pass_1 = SubResource( 9 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Particles = SubResource( 10 )
+
+[node name="Spatial" type="Spatial" parent="."]
+
+[node name="Position3D" type="Position3D" parent="Spatial"]
+
+[node name="Camera" type="Camera" parent="Spatial/Position3D"]
+transform = Transform( 1, 0, 0, 0, 0.877555, 0.479476, 0, -0.479476, 0.877555, 0, 1.45093, 3.04936 )
+current = true
+

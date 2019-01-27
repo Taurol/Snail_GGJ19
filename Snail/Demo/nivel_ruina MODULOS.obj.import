@@ -1,0 +1,18 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/nivel_ruina MODULOS.obj-3a8034468e22013fb3e0057fb0de7e29.mesh"
+
+[deps]
+
+files=[ "res://.import/nivel_ruina MODULOS.obj-3a8034468e22013fb3e0057fb0de7e29.mesh" ]
+
+source_file="res://Snail/Demo/nivel_ruina MODULOS.obj"
+dest_files=[ "res://.import/nivel_ruina MODULOS.obj-3a8034468e22013fb3e0057fb0de7e29.mesh", "res://.import/nivel_ruina MODULOS.obj-3a8034468e22013fb3e0057fb0de7e29.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+optimize_mesh=true

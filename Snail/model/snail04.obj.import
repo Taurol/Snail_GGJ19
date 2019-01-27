@@ -1,0 +1,18 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/snail04.obj-84ba4d2c9c32f3a477ccb8a79f9b820b.mesh"
+
+[deps]
+
+files=[ "res://.import/snail04.obj-84ba4d2c9c32f3a477ccb8a79f9b820b.mesh" ]
+
+source_file="res://Snail/model/snail04.obj"
+dest_files=[ "res://.import/snail04.obj-84ba4d2c9c32f3a477ccb8a79f9b820b.mesh", "res://.import/snail04.obj-84ba4d2c9c32f3a477ccb8a79f9b820b.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+optimize_mesh=true
