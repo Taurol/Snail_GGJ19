@@ -31,7 +31,7 @@ func _ready()->void:
 
 func _physics_process(delta):
 	gravity_speed+=gravity*delta
-	
+	print(coin_counter)
 	if $RayCast.is_colliding():
 		gravity_speed=0
 	calculate_basis()
@@ -75,23 +75,33 @@ func module(a:Vector3)->float:
 	var m:float = sqrt(a.x*a.x + a.y*a.y+a.z*a.z)
 	return m
 
-func calculate_basis():
+func calculate_basis()->void:
 	if $CollisionShape/RayCast.is_colliding():
 		var plane_normal:Vector3=$CollisionShape/RayCast.get_collision_normal().normalized()
 		var versor:Vector3=plane_normal.cross(transform.basis.y.normalized()).normalized()
 		if versor!=Vector3(0,0,0):
-			transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y))
-		print(\"Basis\",transform.basis,\"end \")
-		print(\"  \",plane_normal,\"  \",versor)
+			soften_basis(versor,plane_normal)
+			#transform.basis.orthonormalized()
+			#transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y)).orthonormalized()
+		#print(\"Basis\",transform.basis,\"end \")
+		#print(\"  \",plane_normal,\"  \",versor)
+
+func soften_basis(versor:Vector3,plane_normal:Vector3)->void:
+	transform.basis=transform.basis.orthonormalized()
+	#$Tween.interpolate_property(self,\"transform/basis\",transform.basis,transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y)).orthonormalized(),0.2,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+	#$Tween.start()
+	#transform.basis=transform.basis.rotated(versor,-angle(plane_normal,transform.basis.y)).orthonormalized()
+
 \"\"\"
 func coin_system():
 	for n in range(get_slide_count()-1):
 		if get_slide_collision(n).is_in_group(\"Coins\"):
 			coin_counter+=1\"\"\""
 
-[sub_resource type="SphereShape" id=2]
+[sub_resource type="CapsuleShape" id=11]
 
-radius = 0.302652
+radius = 0.27563
+height = 0.714641
 
 [sub_resource type="CanvasItemMaterial" id=3]
 
@@ -121,6 +131,7 @@ emission_shape = 2
 emission_box_extents = Vector3( 0.4, 0.5, 0.4 )
 spread = 0.0
 gravity = Vector3( 0, 9.8, 0 )
+angular_velocity = 54.2951
 radial_accel = 6.45
 radial_accel_random = 0.48
 damping = 9.68
@@ -155,7 +166,7 @@ script = SubResource( 1 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0899481, 0, -0.126201 )
-shape = SubResource( 2 )
+shape = SubResource( 11 )
 
 [node name="RayCast" type="RayCast" parent="CollisionShape"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0059469, 0, -0.358795 )

@@ -8,7 +8,8 @@ func _on_Coins_body_entered(body):
 	if body.is_in_group(\"Player\"):
 		body.add_coin()
 		monitoring=false
-		$AnimationPlayer.play(\"got\")"
+		#$AnimationPlayer.play(\"got\")
+		queue_free()"
 
 [sub_resource type="SpatialMaterial" id=2]
 
